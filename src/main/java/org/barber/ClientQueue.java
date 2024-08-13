@@ -1,23 +1,20 @@
 package org.barber;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
-public class ClientQueue {
-    private ArrayList<Client> queue;
-
-    public ClientQueue() {
-        this.queue = new ArrayList<>();
-    }
+class ClientQueue {
+    private LinkedList<Client> queue = new LinkedList<>();
 
     public void enqueue(Client client) {
-        queue.add(client);
+        if (client.isVIP() && !queue.isEmpty() && !queue.getFirst().isVIP()) {
+            queue.addFirst(client); // VIPs jump to the front if the first in line is not a VIP
+        } else {
+            queue.add(client);
+        }
     }
 
     public Client dequeue() {
-        if (isEmpty()) {
-            return null;
-        }
-        return queue.remove(0);
+        return queue.poll();
     }
 
     public boolean isEmpty() {
@@ -30,11 +27,5 @@ public class ClientQueue {
 
     public Client get(int index) {
         return queue.get(index);
-    }
-
-    public void remove(int index) {
-        if (index >= 0 && index < queue.size()) {
-            queue.remove(index);
-        }
     }
 }

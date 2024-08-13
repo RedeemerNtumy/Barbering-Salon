@@ -1,8 +1,6 @@
 package org.barber;
 
-import java.util.ArrayList;
-
-public class BarberShop {
+class BarberShop {
     private Client mainChair;
     private ClientQueue waitingChairs;
     private int maxWaitingChairs;
@@ -35,34 +33,19 @@ public class BarberShop {
         return sb.toString();
     }
 
-    public void clientArrives(Client client) {
+    public boolean clientArrives(Client client) {
         if (mainChair == null) {
             mainChair = client;
+            return true;
+        } else if (waitingChairs.size() < maxWaitingChairs) {
+            waitingChairs.enqueue(client);
+            return true;
         } else {
-            if (waitingChairs.size() < maxWaitingChairs) {
-                if (client.isVIP()) {
-                    if (!waitingChairs.isEmpty() && waitingChairs.get(0).isVIP()) {
-                        waitingChairs.enqueue(client);
-                    } else {
-                        waitingChairs.enqueue(client);
-                    }
-                } else {
-                    waitingChairs.enqueue(client);
-                }
-            } else {
-
-            }
+            return false; // Return false if client could not be seated
         }
     }
 
     public void clientLeavesMainChair() {
-        if (mainChair != null) {
-            mainChair = waitingChairs.dequeue();
-            if (mainChair != null) {
-            }
-        }
-
+        mainChair = waitingChairs.dequeue();
     }
-
-
 }
